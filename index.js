@@ -31,15 +31,17 @@ async function drawPreview(n) {
     previewCtx.scale(1, 0.8)
     previewCtx.translate(300, -200)
     previewCtx.rotate(Math.PI * 0.25)
+    const pixelData = n.getImageData(0, 0, n.canvas.width, n.canvas.height).data
+
     for (let x = 0; x < 74; x++) {
         for (let y = 0; y < 39; y++) {
             for (let offset_x = -1; offset_x < 2; offset_x++) {
                 for (let offset_y = -1; offset_y < 2; offset_y++) {
-                    const pixelData = n.getImageData(x, y, 1, 1).data
-                    if (pixelData[0]) {
+                    const brightValue = pixelData[(y * n.canvas.width + x) * 4]
+                    if (brightValue) {
                         previewCtx.beginPath();
                         previewCtx.strokeStyle = `white`
-                        previewCtx.strokeStyle = `hsl(0 0% ${(pixelData[0] / 255) * 100}%)`
+                        previewCtx.strokeStyle = `hsl(0 0% ${(brightValue / 255) * 100}%)`
                         previewCtx.arc(10 * x + 5 + offset_x * 3.3, 10 * y + 5 + offset_y * 3.3, 0.5, 0, 2 * Math.PI)
                         previewCtx.stroke()
                     }
@@ -85,14 +87,14 @@ async function sleep() {
     for (let i = -20; i < 220; i++) {
         console.log("frame", i)
         const inter = await drawIntermediate(inp, i);
-        gif.addFrame(inter.canvas, {delay: 3, copy: true})
-        //await sleep()
-    // await drawPreview(inter);
+        // gif.addFrame(inter.canvas, {delay: 3, copy: true})
+        await sleep()
+        await drawPreview(inter);
     }
 
-    gif.on('finished', function (blob) {
-        window.open(URL.createObjectURL(blob));
-    });
+    // gif.on('finished', function (blob) {
+    //     window.open(URL.createObjectURL(blob));
+    // });
 
-    gif.render();
+    // gif.render();
 
