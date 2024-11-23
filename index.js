@@ -53,44 +53,65 @@ async function drawPreview(n) {
 
 }
 
-async function drawIntermediate(n, offset) {
+async function drawIntermediate(n, step) {
     /** @type {HTMLCanvasElement} */ const cv = document.getElementById('intermediate')
     const interCtx = cv.getContext('2d')
     interCtx.save()
     interCtx.clearRect(0, 0, cv.width, cv.height);
     interCtx.drawImage(n.canvas, 0, 0)
 
-    const txt = "I love Mims!"
-    interCtx.font = "44px Pilowlava"
-    const wdh = interCtx.measureText(txt).width / Math.sqrt(2)
-    interCtx.fillStyle = "white"
-    interCtx.translate(42 / Math.sqrt(2) - offset, 55 + offset)
-    interCtx.rotate(-Math.PI * 0.25)
-    interCtx.fillText(txt, 0, 0)
+    /** @type {HTMLInputElement} */ const imageInput = document.getElementById("imageInput")
+    if (imageInput.files[0]) {
+        const file = imageInput.files[0]
+        interCtx.translate(0, 33.5)
+        interCtx.rotate(-Math.PI * 0.25)
+        interCtx.translate(20, 0)
+        const img = new Image();
+        img.src = URL.createObjectURL(file)
+        const { promise, resolve } = Promise.withResolvers()
+        img.onload = resolve;
+        await promise;
+
+        interCtx.drawImage(img, 0, 0, 28, 28)
+    }
+    // const txt = "I love Mims!"
+    // interCtx.font = "44px Pilowlava"
+    // const wdh = interCtx.measureText(txt).width / Math.sqrt(2)
+    // interCtx.fillStyle = "white"
+    // interCtx.translate(42 / Math.sqrt(2) - step, 55 + step)
+    // interCtx.rotate(-Math.PI * 0.25)
+    // interCtx.fillText(txt, 0, 0)
     interCtx.restore()
 
     return interCtx;
 }
 
+
+
 async function sleep() {
     const { promise, resolve } = Promise.withResolvers();
-
     setTimeout(resolve, 0);
-
     return promise;
 }
 
-    const inp = await drawInput();
-    const gif = new GIF({workerScript: URL.createObjectURL(workerBlob)});
+const inp = await drawInput();
+const gif = new GIF({ workerScript: URL.createObjectURL(workerBlob) });
 
 
-    for (let i = -20; i < 220; i++) {
-        console.log("frame", i)
-        const inter = await drawIntermediate(inp, i);
-        // gif.addFrame(inter.canvas, {delay: 3, copy: true})
-        await sleep()
-        await drawPreview(inter);
-    }
+// for (let i = -20; i < 220; i++) {
+//     console.log("frame", i)
+//     const inter = await drawIntermediate(inp, i);
+//     // gif.addFrame(inter.canvas, {delay: 3, copy: true})
+//     await sleep()
+//     await drawPreview(inter);
+// }
+
+document.getElementById("imageInput").addEventListener("input", async () => {
+    const inter = await drawIntermediate(inp, 0)
+    await drawPreview(inter);
+})
+const inter = await drawIntermediate(inp, 0)
+await drawPreview(inter);
 
     // gif.on('finished', function (blob) {
     //     window.open(URL.createObjectURL(blob));
