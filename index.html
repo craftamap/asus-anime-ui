@@ -3,9 +3,63 @@
     <canvas width="74" height="39" id="input"></canvas>
     <canvas width="74" height="39" id="intermediate"></canvas>
     <canvas width="600" height="400" id="preview"></canvas>
-    <div>
-        <input type="file" id="imageInput" />
-    </div>
+    <form>
+        <fieldset>
+            <legend>Global settings</legend>
+            <div><input type="checkbox" id="border" name="border" checked><label for="border">Render border</label></div>
+        </fieldset>
+        <fieldset id="mode">
+            <legend>Mode</legend>
+            <div>
+                <input type="radio" id="text" name="mode" value="TEXT" checked /><label for="text">Text (marquee)</label>
+            </div>
+            <div>
+                <input type="radio" id="image" name="mode" value="IMAGE" /><label for="image">Image</label>
+            </div>
+        </fieldset>
+        <fieldset id="text-settings" style="display: block;">
+            <legend>Text</legend>
+            <div> 
+                <input type="text" id="text-input" value="text" />
+            </div>
+            <div>
+                <label for="progress">progress</label>
+                <input type="range" id="progress" min="0" max="1" step="0.01" value="0" />
+                <output id="progress-out"></output>
+            </div>
+        </fieldset>
+        <fieldset id="image-settings" style="display: none;">
+            <legend>Image</legend>
+            <div>
+                <input type="file" id="imageInput" />
+            </div>
+            <div>
+                <label for="scale">Scale</label>
+                <input type="range" id="scale" min="0.5" max="3" step="0.05" value="1" />
+                <output id="scale-out"></output>
+            </div>
+            <div>
+                <label for="xoff">x-offset</label>
+                <input type="range" id="xoff" min="-50" max="50" step="0.5" value="0" />
+                <output id="xoff-out"></output>
+            </div>
+            </div>
+            <div>
+                <label for="yoff">y-offset</label>
+                <input type="range" id="yoff" min="-50" max="50" step="0.5" value="0" />
+                <output id="yoff-out"></output>
+            </div>
+            </div>
+            <div>
+                <label for="rotate">rotate</label>
+                <input type="range" id="rotate" min="-4" max="4" step="0.1" value="0" />
+                <output id="rotate-out"></output>
+            </div>
+            <div>
+                <input type="checkbox" id="invert" /><label for="invert">Invert</label>
+            </div>
+        </fieldset>
+    </form>
     <div>
         <input type="button" id="download" value="Download" />
     </div>
